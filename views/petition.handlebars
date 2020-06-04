@@ -1,14 +1,28 @@
-<h1><form method="POST" id="users" action="" name="Geeks"> 
-        First name: 
+<h1>Sign the petition to make something great! </h1>
+ <form method="POST"> 
+        <div> 
+               <h2>First name: </h2>
   
-        <input type="text" name="first"> 
-        <br> Last name: 
+        <input type="text" name="first">  
+        </div>
+        <div> 
+               <h2>Last name: </h2>
+         
   
-        <input type="text" name="last" > 
-        <br> Signature:
-
-        <input type="text" name="signature">
-        <br>
+        <input type="text" name="last" >
+        </div> 
+        <div> 
+               <h2>Sign here:</h2>
+       
+       
+       <canvas width="400" height="100" name="canvas"></canvas>
+       <input  type="hidden" name="signature">
+        
+        </div>
+        <div>
   
-        <input type="submit" value="Submit">
-        </form></h1>
+        <input type="submit" name ="submit" value="Submit">
+        </div>
+        
+</form>
+<script src="script.js"></script>

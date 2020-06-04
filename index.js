@@ -6,7 +6,7 @@ var cookieSession = require("cookie-session");
 
 // app.use(
 //     cookieSession({
-//         secret: secret,
+//         secret: "here goes the secret",
 //         maxAge: 1000 * 60 * 60 * 24 * 14,
 //     })
 // );
@@ -37,6 +37,10 @@ app.use(express.static("./public"));
 //         next();
 //     }
 // });
+
+app.get("/", (req, res) => {
+    res.redirect("/petition");
+});
 
 app.get("/petition", (req, res) => {
     res.render("petition");
