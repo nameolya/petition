@@ -57,7 +57,10 @@ app.post("/petition", (req, res) => {
 app.get("/signed", (req, res) => {
     db.getCount()
         .then((results) => {
-            res.render("signed", results);
+            console.log("Total Signed:", results);
+            res.render("signed", {
+                count: results.rows[0].count,
+            });
         })
         .catch((err) => {
             console.log("err in getCount:", err);
@@ -67,7 +70,16 @@ app.get("/signed", (req, res) => {
 app.get("/signers", (req, res) => {
     db.getNames()
         .then((results) => {
-            console.log("results:", results);
+            console.log("List of persons signed:", results);
+            let signers = [];
+            for (let i = 0; i < results.rows.length; i++) {
+                let fullName = " ";
+                fullName += results.rows[i].first + " " + results.rows[i].last;
+                signers.push(fullName);
+            }
+            res.render("signers", {
+                signers: signers,
+            });
         })
         .catch((err) => {
             console.log("err in getNames:", err);
