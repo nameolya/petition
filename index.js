@@ -47,14 +47,17 @@
     });
 
     app.get("/petition", (req, res) => {
-        res.render("petition");
-    });
-
-    app.post("/petition", (req, res) => {
+        console.log("req.session.sigID:", req.session.sigID);
         if (req.session.sigID) {
             console.log("the user has already signed the petition");
             res.redirect("/signed");
-        } else if (req.body.first && req.body.last && req.body.signature) {
+        } else {
+            res.render("petition");
+        }
+    });
+
+    app.post("/petition", (req, res) => {
+        if (req.body.first && req.body.last && req.body.signature) {
             db.addName(req.body.first, req.body.last, req.body.signature)
                 .then((results) => {
                     console.log("first, last:", req.body.first, req.body.last);
