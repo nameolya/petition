@@ -37,10 +37,9 @@
     canvas[0].addEventListener("mouseup", () => (isSigning = false));
     canvas[0].addEventListener("mouseout", () => (isSigning = false));
 
-    function canvasToUrl() {
-        signature[0].value = canvas.toDataUrl();
-        console.log("signature.value:", signature[0].value);
+    function canvasToDataURL() {
+        signature[0].value = canvas[0].toDataURL();
     }
 
-    submit[0].addEventListener("mousedown", canvasToUrl);
+    submit[0].addEventListener("mousedown", canvasToDataURL);
 })();

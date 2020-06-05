@@ -9,7 +9,11 @@ module.exports.addName = (first, last, signature) => {
 };
 
 module.exports.getCount = () => {
-    return db.query(`SELECT COUNT(*), signature FROM signatures`);
+    return db.query(`SELECT COUNT(*) FROM signatures`);
+};
+
+module.exports.getSignature = (sessionID) => {
+    return db.query(`SELECT signature FROM signatures WHERE id = ${sessionID}`);
 };
 
 module.exports.getNames = () => {

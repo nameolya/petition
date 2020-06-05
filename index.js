@@ -51,12 +51,15 @@
     });
 
     app.post("/petition", (req, res) => {
-        if (req.body.first && req.body.last && req.body.signature) {
+        if (req.session.sigID) {
+            console.log("the user has already signed the petition");
+            res.redirect("/signed");
+        } else if (req.body.first && req.body.last && req.body.signature) {
             db.addName(req.body.first, req.body.last, req.body.signature)
-                .then(() => {
+                .then((results) => {
                     console.log("first, last:", req.body.first, req.body.last);
                     console.log("new record added");
-                    req.session.sigID = response.rows[0].id;
+                    req.session.sigID = results.rows[0].id;
                     console.log("req.session.sigID:", req.session.sigID);
                     res.redirect("/signed");
                 })
@@ -71,12 +74,14 @@
 
     app.get("/signed", (req, res) => {
         if (req.session.sigID) {
-            db.getCountSignature()
+            db.getCount()
                 .then((results) => {
-                    console.log("Total Signed:", results);
-                    res.render("signed", {
-                        count: results.rows[0].count,
-                        signature: results.rows[0].signature,
+                    let count = results.rows[0].count;
+                    db.getSignature(req.session.sigID).then((results) => {
+                        res.render("signed", {
+                            count: count,
+                            signature: results.rows[0].signature,
+                        });
                     });
                 })
                 .catch((err) => {
