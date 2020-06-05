@@ -51,7 +51,7 @@
     });
 
     app.post("/petition", (req, res) => {
-        if ((req.body.first, req.body.last, req.body.signature)) {
+        if (req.body.first && req.body.last && req.body.signature) {
             db.addName(req.body.first, req.body.last, req.body.signature)
                 .then(() => {
                     console.log("first, last:", req.body.first, req.body.last);
@@ -64,6 +64,7 @@
                     console.log("error in addName:", err);
                 });
         } else {
+            console.log("the form is not filled in properly");
             res.redirect("/petition");
         }
     });

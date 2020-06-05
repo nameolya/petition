@@ -38,8 +38,8 @@
     canvas[0].addEventListener("mouseout", () => (isSigning = false));
 
     function canvasToUrl() {
-        signature.value = canvas.toDataUrl();
-        console.log("signature.value:", signature.value);
+        signature[0].value = canvas.toDataUrl();
+        console.log("signature.value:", signature[0].value);
     }
 
     submit[0].addEventListener("mousedown", canvasToUrl);
