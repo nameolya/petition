@@ -4,8 +4,10 @@
     const db = require("./db");
     var cookieSession = require("cookie-session");
     const { secret } = require("./secrets.json");
+    const csurf = require("csurf");
 
-    //
+    // setting up cookie-session:
+
     app.use(
         cookieSession({
             secret: secret,
@@ -25,7 +27,16 @@
         })
     );
 
-    ///
+    // protecting against CSRF and clickjacking:
+    app.use(csurf());
+    app.use(function (req, res, next) {
+        res.locals.csrfToken = req.csrfToken();
+        res.setHeader("x-frame-options", "deny");
+        next();
+    });
+
+    /// serving static folder:
+
     app.use(express.static("./public"));
 
     //______
@@ -54,13 +65,12 @@
                 });
         } else {
             res.redirect("/petition");
-            alert("please fill in all the required fields");
         }
     });
 
     app.get("/signed", (req, res) => {
         if (req.session.sigID) {
-            db.getCount()
+            db.getCountSignature()
                 .then((results) => {
                     console.log("Total Signed:", results);
                     res.render("signed", {
