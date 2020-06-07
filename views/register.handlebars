@@ -1,0 +1,32 @@
+<h1>Please register! </h1>
+ <form method="POST"> 
+
+       <div> 
+       <h2>First Name: </h2>
+       <input type="text" name="first">  
+       </div>
+
+       <div> 
+       <h2>Last Name: </h2>
+       <input type="text" name="last" >
+       </div> 
+
+       <div> 
+       <h2>Email Address: </h2>
+       <input type="text" name="email">  
+       </div>
+
+       <div> 
+       <h2>Password: </h2>
+       <input type="text" name="password" >
+       </div> 
+
+        <div>
+        <input type="submit" name ="submit" value="SIGN UP">
+        </div>
+
+        <div>
+            <p>If you are already a member, please <a href="login">Log in</a></p>
+        </div>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">    
+</form>

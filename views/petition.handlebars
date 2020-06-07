@@ -1,23 +1,15 @@
-<h1>Sign the petition to make something great! </h1>
+<h1>Hey {{name}}! We are happy to see you! </h1>
+<h1>Every voice makes a difference! </h1>
+<h1>Please sign the petition and help us make this world a better place</h1>
  <form method="POST"> 
 
        <div> 
-       <h2>First name: </h2>
-       <input type="text" name="first">  
-       </div>
-
-       <div> 
-       <h2>Last name: </h2>
-       <input type="text" name="last" >
-       </div> 
-
-       <div> 
-       <h2>Sign here:</h2>
+       <h2> Sign here: </h2>
        <canvas width="400" height="100" name="canvas"></canvas>
        </div>
 
         <div>
-        <input type="submit" name ="submit" value="Submit">
+        <input type="submit" name ="submit" value="SUBMIT">
         </div>
         <input type="hidden" name="signature">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">    
