@@ -1,0 +1,27 @@
+<h1>{{name}}, please tell us about yourself: </h1>
+ <form method="POST"> 
+
+       <div> 
+       <h2>What is your age? </h2>
+       <input type="text" name="age">  
+       </div>
+
+       <div> 
+       <h2>What is your city? </h2>
+       <input type="text" name="city" >
+       </div> 
+
+       <div> 
+       <h2>Link to your social network profile: </h2>
+       <input type="text" name="url">  
+       </div>
+
+        <div>
+        <input type="submit" name ="submit" value="SIGN UP">
+        </div>
+
+        <div>
+            <p>You can also skip this step and go directly to <a href="petition">petition</a></p>
+        </div>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">    
+</form>

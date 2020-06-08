@@ -61,7 +61,8 @@
         } else if (
             req.session.userID &&
             !req.session.sigID &&
-            req.url != "/petition"
+            req.url != "/petition" &&
+            req.url != "/profile"
         ) {
             console.log("redirect: user shall sign the petition first");
             res.redirect("/petition");
@@ -78,12 +79,13 @@
         }
     });
 
-    //______
+    /// routes: ______
 
     app.get("/", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
         res.redirect("/register");
     });
+    // REGISTER---
 
     app.get("/register", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
@@ -110,11 +112,10 @@
                         .then((results) => {
                             console.log("new record added");
                             req.session.userID = results.rows[0].id;
-                            console.log(
-                                "req.session.userID:",
-                                req.session.userID
-                            );
-                            res.redirect("/petition");
+                            req.session.userName = results.rows[0].first;
+                            req.session.userSurname = results.rows[0].last;
+                            console.log("req.session:", req.session);
+                            res.redirect("/profile");
                         })
                         .catch((err) => {
                             console.log("error in addAccount:", err);
@@ -130,6 +131,7 @@
             res.render("register");
         }
     });
+    //// LOG IN---
 
     app.get("/login", (req, res) => {
         console.log("req.session.userID:", req.session.userID);
@@ -163,7 +165,7 @@
                                             console.log(
                                                 "user hasn't signed the petition yet"
                                             );
-                                            res.redirect("/petition");
+                                            res.redirect("/profile");
                                         } else {
                                             console.log(
                                                 "the user has already signed the petition"
@@ -198,6 +200,51 @@
             res.render("login");
         }
     });
+    ///// PROFILE------
+
+    app.get("/profile", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        console.log("req.session.userID:", req.session.userID);
+
+        res.render("profile", {
+            name: req.session.userName,
+        });
+    });
+
+    app.post("/profile", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        if (
+            req.body.url.startsWith("http://") ||
+            req.body.url.startsWith("https://")
+        ) {
+            db.addProfile(
+                req.body.age,
+                req.body.city,
+                req.body.url,
+                req.session.userID
+            )
+                .then((results) => {
+                    console.log(
+                        "new profile record added with id:",
+                        results.rows[0].id
+                    );
+                    res.redirect("/petition");
+                })
+                .catch((err) => {
+                    console.log("error in addProfile:", err);
+                    res.render("profile", {
+                        name: req.session.userName,
+                    });
+                });
+        } else {
+            console.log("the url is not valid");
+            res.render("profile", {
+                name: req.session.userName,
+            });
+        }
+    });
+
+    /// PETITION--------
 
     app.get("/petition", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);

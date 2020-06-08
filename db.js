@@ -3,7 +3,7 @@ var db = spicedPg("postgres:postgres:postgres@localhost:5432/signatures");
 
 module.exports.addAccount = (first, last, email, hashedPw) => {
     return db.query(
-        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id`,
+        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id, first, last`,
         [first, last, email, hashedPw]
     );
 };
@@ -41,5 +41,12 @@ module.exports.getSignature = (sessionUserID) => {
 module.exports.getNames = () => {
     return db.query(
         `SELECT first, last FROM users INNER JOIN signatures ON users.id=signatures.user_id;`
+    );
+};
+
+module.exports.addProfile = (age, city, url, sessionUserID) => {
+    return db.query(
+        `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4) RETURNING id`,
+        [age, city, url, sessionUserID]
     );
 };
