@@ -38,9 +38,9 @@ module.exports.getSignature = (sessionUserID) => {
     ]);
 };
 
-module.exports.getNames = () => {
+module.exports.getSigners = () => {
     return db.query(
-        `SELECT first, last FROM users INNER JOIN signatures ON users.id=signatures.user_id;`
+        `SELECT first, last, age, city, url FROM users INNER JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON signatures.user_id=user_profiles.user_id;`
     );
 };
 

@@ -273,6 +273,7 @@
             res.redirect("/petition");
         }
     });
+    ////SIGNED-----
 
     app.get("/signed", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
@@ -283,6 +284,7 @@
                     res.render("signed", {
                         count: count,
                         signature: results.rows[0].signature,
+                        name: req.session.userName,
                     });
                 });
             })
@@ -290,10 +292,11 @@
                 console.log("err in getCount:", err);
             });
     });
+    /// SIGNERS----
 
     app.get("/signers", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        db.getNames()
+        db.getSigners()
             .then((results) => {
                 console.log("List of persons signed:", results);
                 let signers = [];
@@ -301,7 +304,13 @@
                     let fullName = " ";
                     fullName +=
                         results.rows[i].first + " " + results.rows[i].last;
-                    signers.push(fullName);
+                    signers.push({
+                        fullname: fullName,
+                        age: results.rows[i].age,
+                        city: results.rows[i].city,
+                        url: results.rows[i].url,
+                    });
+                    console.log("signers:", signers);
                 }
                 res.render("signers", {
                     signers: signers,
