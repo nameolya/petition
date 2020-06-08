@@ -40,6 +40,44 @@
 
     app.use(express.static("./public"));
 
+    /// setting up cookies:
+
+    app.use((req, res, next) => {
+        console.log("middleware running");
+        console.log(`ran ${req.method} at ${req.url} route`);
+        console.log(
+            "req.session.userID, req.session.sigID:",
+            req.session.userID,
+            req.session.sigID
+        );
+        if (
+            !req.session.userID &&
+            !req.session.sigID &&
+            req.url != "/register" &&
+            req.url != "/login"
+        ) {
+            console.log("redirect: user shall register or to log in");
+            res.redirect("/register");
+        } else if (
+            req.session.userID &&
+            !req.session.sigID &&
+            req.url != "/petition"
+        ) {
+            console.log("redirect: user shall sign the petition first");
+            res.redirect("/petition");
+        } else if (
+            req.session.userID &&
+            req.session.sigID &&
+            req.url != "/signers" &&
+            req.url != "/signed"
+        ) {
+            console.log("redirect: user has already signed the petition");
+            res.redirect("/signed");
+        } else {
+            next();
+        }
+    });
+
     //______
 
     app.get("/", (req, res) => {
@@ -50,12 +88,7 @@
     app.get("/register", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
         console.log("req.session.userID:", req.session.userID);
-        if (req.session.userID) {
-            console.log("this user is already registered");
-            res.redirect("/login");
-        } else {
-            res.render("register");
-        }
+        res.render("register");
     });
 
     app.post("/register", (req, res) => {
@@ -137,7 +170,7 @@
                                             );
                                             req.session.sigID =
                                                 req.session.userID;
-                                            // results.rows[0].id;
+
                                             console.log(
                                                 "req.session.sigID:",
                                                 req.session.sigID
@@ -169,17 +202,10 @@
     app.get("/petition", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
         console.log("req.session.userID:", req.session.userID);
-        if (req.session.userID) {
-            if (req.session.sigID) {
-                res.redirect("/signed");
-            } else {
-                res.render("petition", {
-                    name: req.session.userName,
-                });
-            }
-        } else {
-            res.redirect("/register");
-        }
+
+        res.render("petition", {
+            name: req.session.userName,
+        });
     });
 
     app.post("/petition", (req, res) => {
@@ -188,7 +214,7 @@
             db.addSignature(req.body.signature, req.session.userID)
                 .then((results) => {
                     console.log("new signature added");
-                    req.session.sigID = results.rows[0].id;
+                    req.session.sigID = req.session.userID;
                     console.log("req.session.sigID:", req.session.sigID);
                     res.redirect("/signed");
                 })
@@ -203,50 +229,40 @@
 
     app.get("/signed", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        if (req.session.sigID) {
-            db.getCount()
-                .then((results) => {
-                    let count = results.rows[0].count;
-                    db.getSignature(req.session.userID).then((results) => {
-                        res.render("signed", {
-                            count: count,
-                            signature: results.rows[0].signature,
-                        });
+        db.getCount()
+            .then((results) => {
+                let count = results.rows[0].count;
+                db.getSignature(req.session.userID).then((results) => {
+                    res.render("signed", {
+                        count: count,
+                        signature: results.rows[0].signature,
                     });
-                })
-                .catch((err) => {
-                    console.log("err in getCount:", err);
                 });
-        } else {
-            console.log("/signed: out of cookie-session redirect");
-            res.redirect("/register");
-        }
+            })
+            .catch((err) => {
+                console.log("err in getCount:", err);
+            });
     });
 
     app.get("/signers", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        if (req.session.sigID) {
-            db.getNames()
-                .then((results) => {
-                    console.log("List of persons signed:", results);
-                    let signers = [];
-                    for (let i = 0; i < results.rows.length; i++) {
-                        let fullName = " ";
-                        fullName +=
-                            results.rows[i].first + " " + results.rows[i].last;
-                        signers.push(fullName);
-                    }
-                    res.render("signers", {
-                        signers: signers,
-                    });
-                })
-                .catch((err) => {
-                    console.log("err in getNames:", err);
+        db.getNames()
+            .then((results) => {
+                console.log("List of persons signed:", results);
+                let signers = [];
+                for (let i = 0; i < results.rows.length; i++) {
+                    let fullName = " ";
+                    fullName +=
+                        results.rows[i].first + " " + results.rows[i].last;
+                    signers.push(fullName);
+                }
+                res.render("signers", {
+                    signers: signers,
                 });
-        } else {
-            console.log("/signers: out of cookie-session redirect");
-            res.redirect("/register");
-        }
+            })
+            .catch((err) => {
+                console.log("err in getNames:", err);
+            });
     });
 
     app.listen(8080, () => console.log("server is listening..."));
