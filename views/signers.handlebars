@@ -1,10 +1,11 @@
 <h1>We are making the world a better place!</h1>
+<h2>{{cityselected}}</h2>
 <h2>
     {{#each signers}}
     <ul>  {{#if url}}
-        <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  {{this.city}}
+        <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
 {{else}}
-       {{this.fullname}}  {{this.age}}  {{this.city}}
+       {{this.fullname}}  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
          {{/if}}
     </ul>
     {{/each}}

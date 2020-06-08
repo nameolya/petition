@@ -1,4 +1,5 @@
-<h1>{{name}}, please tell us about yourself: </h1>
+<h1>Welcome, {{name}}!</h1>
+<h1> Please tell us about yourself: </h1>
  <form method="POST"> 
 
        <div> 
@@ -12,16 +13,20 @@
        </div> 
 
        <div> 
-       <h2>Link to your social network profile: </h2>
+       <h2>Link to your web page or social network page: </h2>
        <input type="text" name="url">  
        </div>
 
         <div>
-        <input type="submit" name ="submit" value="SIGN UP">
+        <input type="submit" name ="submit" value="SUBMIT">
         </div>
+
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">    
+</form>
+        <div>{{err}}</div>  
 
         <div>
             <p>You can also skip this step and go directly to <a href="petition">petition</a></p>
         </div>
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">    
-</form>
+        
+    

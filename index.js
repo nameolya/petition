@@ -69,8 +69,10 @@
         } else if (
             req.session.userID &&
             req.session.sigID &&
-            req.url != "/signers" &&
-            req.url != "/signed"
+            (req.url == "/register" ||
+                req.url == "/login" ||
+                req.url == "/petition" ||
+                req.url == "/profile")
         ) {
             console.log("redirect: user has already signed the petition");
             res.redirect("/signed");
@@ -119,16 +121,23 @@
                         })
                         .catch((err) => {
                             console.log("error in addAccount:", err);
-                            res.render("register");
+                            res.render("register", {
+                                err:
+                                    "oops, something went wrong! please try again!",
+                            });
                         });
                 })
                 .catch((err) => {
                     console.log("error in hash:", err);
-                    res.render("register");
+                    res.render("register", {
+                        err: "oops, something went wrong! please try again!",
+                    });
                 });
         } else {
             console.log("the form is not filled in properly");
-            res.render("register");
+            res.render("register", {
+                err: "please fill in all the required fields!",
+            });
         }
     });
     //// LOG IN---
@@ -182,22 +191,31 @@
                                     })
                                     .catch((err) => {
                                         console.log("error in sigCheck", err);
-                                        res.render("login");
+                                        res.render("login", {
+                                            err:
+                                                "oops, something went wrong, please try again!",
+                                        });
                                     });
                             } else {
                                 console.log("password doesn't match");
-                                res.render("login");
+                                res.render("login", {
+                                    err: "oops! wrong password! try again",
+                                });
                             }
                         }
                     );
                 })
                 .catch((err) => {
                     console.log("error in getHashedPw", err);
-                    res.render("login");
+                    res.render("login", {
+                        err: "oops, something went wrong, please try again!",
+                    });
                 });
         } else {
             console.log("the form is not filled in properly");
-            res.render("login");
+            res.render("login", {
+                err: "please fill in all the required fields",
+            });
         }
     });
     ///// PROFILE------
@@ -215,7 +233,8 @@
         console.log(`ran ${req.method} at ${req.url} route`);
         if (
             req.body.url.startsWith("http://") ||
-            req.body.url.startsWith("https://")
+            req.body.url.startsWith("https://") ||
+            req.body.url == ""
         ) {
             db.addProfile(
                 req.body.age,
@@ -234,12 +253,14 @@
                     console.log("error in addProfile:", err);
                     res.render("profile", {
                         name: req.session.userName,
+                        err: "oops, something went wrong, please try again!",
                     });
                 });
         } else {
             console.log("the url is not valid");
             res.render("profile", {
                 name: req.session.userName,
+                err: "please enter a valid url",
             });
         }
     });
@@ -259,7 +280,7 @@
         console.log(`ran ${req.method} at ${req.url} route`);
         if (req.body.signature) {
             db.addSignature(req.body.signature, req.session.userID)
-                .then((results) => {
+                .then(() => {
                     console.log("new signature added");
                     req.session.sigID = req.session.userID;
                     console.log("req.session.sigID:", req.session.sigID);
@@ -267,10 +288,15 @@
                 })
                 .catch((err) => {
                     console.log("error in addSignature:", err);
+                    res.render("petition", {
+                        err: "oops, something went wrong, please try again!",
+                    });
                 });
         } else {
             console.log("the form is not signed in properly");
-            res.redirect("/petition");
+            res.render("petition", {
+                err: "oops, looks like you didn't sign it! try again please",
+            });
         }
     });
     ////SIGNED-----
@@ -298,7 +324,7 @@
         console.log(`ran ${req.method} at ${req.url} route`);
         db.getSigners()
             .then((results) => {
-                console.log("List of persons signed:", results);
+                console.log("List of persons signed:", results.rows);
                 let signers = [];
                 for (let i = 0; i < results.rows.length; i++) {
                     let fullName = " ";
@@ -307,17 +333,48 @@
                     signers.push({
                         fullname: fullName,
                         age: results.rows[i].age,
-                        city: results.rows[i].city,
+                        city: results.rows[i].upper,
                         url: results.rows[i].url,
                     });
-                    console.log("signers:", signers);
                 }
                 res.render("signers", {
                     signers: signers,
                 });
             })
             .catch((err) => {
-                console.log("err in getNames:", err);
+                console.log("err in getSigners:", err);
+            });
+    });
+
+    ///SIGNERS BY CITY---
+
+    app.get("/signers:city", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        console.log("req.params.city: ", req.params.city.slice(1));
+        db.getSignersByCity(req.params.city.slice(1))
+            .then((results) => {
+                console.log(
+                    "List of persons signed in this city:",
+                    results.rows
+                );
+                let signers = [];
+                for (let i = 0; i < results.rows.length; i++) {
+                    let fullName = " ";
+                    fullName +=
+                        results.rows[i].first + " " + results.rows[i].last;
+                    signers.push({
+                        fullname: fullName,
+                        age: results.rows[i].age,
+                        url: results.rows[i].url,
+                    });
+                }
+                res.render("signers", {
+                    signers: signers,
+                    cityselected: req.params.city.slice(1).toUpperCase(),
+                });
+            })
+            .catch((err) => {
+                console.log("err in getSigners:", err);
             });
     });
 

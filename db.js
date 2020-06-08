@@ -40,7 +40,14 @@ module.exports.getSignature = (sessionUserID) => {
 
 module.exports.getSigners = () => {
     return db.query(
-        `SELECT first, last, age, city, url FROM users INNER JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON signatures.user_id=user_profiles.user_id;`
+        `SELECT first, last, age, UPPER(city), url FROM users INNER JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON signatures.user_id=user_profiles.user_id;`
+    );
+};
+
+module.exports.getSignersByCity = (city) => {
+    return db.query(
+        `SELECT first, last, age, url FROM users INNER JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON signatures.user_id=user_profiles.user_id  WHERE UPPER(city) = $1;`,
+        [city]
     );
 };
 
