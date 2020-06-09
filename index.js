@@ -9,7 +9,6 @@
     } else {
         secret = require("./secrets").secret;
     }
-    const { secret } = require("./secrets.json");
     const csurf = require("csurf");
     const { hash, compare } = require("./bc");
 
