@@ -3,6 +3,12 @@
     const app = express();
     const db = require("./db");
     var cookieSession = require("cookie-session");
+    let secret;
+    if (process.env.PORT) {
+        secret = process.env.secret;
+    } else {
+        secret = require("./secrets").secret;
+    }
     const { secret } = require("./secrets.json");
     const csurf = require("csurf");
     const { hash, compare } = require("./bc");
