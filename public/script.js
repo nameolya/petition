@@ -1,11 +1,10 @@
 (function () {
     console.log("hello");
-    const canvas = document.getElementsByName("canvas");
-    console.log(canvas[0]);
-    const signature = document.getElementsByName("signature");
-    const submit = document.getElementsByName("submit");
+    const canvas = document.getElementById("canvas");
+    const signature = document.getElementById("signature");
+    const submit = document.getElementById("submit");
 
-    const ctx = canvas[0].getContext("2d");
+    const ctx = canvas.getContext("2d");
 
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
@@ -20,6 +19,7 @@
         if (!isSigning) {
             return;
         } else {
+            signature.class = "signed";
             ctx.beginPath();
             ctx.moveTo(lastX, lastY);
             ctx.lineTo(e.offsetX, e.offsetY);
@@ -28,18 +28,18 @@
         }
     }
 
-    canvas[0].addEventListener("mousedown", (e) => {
+    canvas.addEventListener("mousedown", (e) => {
         isSigning = true;
         [lastX, lastY] = [e.offsetX, e.offsetY];
     });
 
-    canvas[0].addEventListener("mousemove", sign);
-    canvas[0].addEventListener("mouseup", () => (isSigning = false));
-    canvas[0].addEventListener("mouseout", () => (isSigning = false));
+    canvas.addEventListener("mousemove", sign);
+    canvas.addEventListener("mouseup", () => (isSigning = false));
+    canvas.addEventListener("mouseout", () => (isSigning = false));
 
     function canvasToDataURL() {
-        signature[0].value = canvas[0].toDataURL();
+        signature.value = canvas.toDataURL();
     }
 
-    submit[0].addEventListener("mousedown", canvasToDataURL);
+    submit.addEventListener("mousedown", canvasToDataURL);
 })();

@@ -5,13 +5,13 @@
 
        <div> 
        <h2> Sign here: </h2>
-       <canvas width="400" height="100" name="canvas"></canvas>
+       <canvas width="400" height="100" name="canvas" id="canvas"></canvas>
        </div>
 
         <div>
-        <input type="submit" name ="submit" value="SUBMIT">
+        <input type="submit" name ="submit" value="SUBMIT" id="submit">
         </div>
-        <input type="hidden" name="signature">
+        <input type="hidden" name="signature" id="signature">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">    
 </form>
 <div>{{err}} </div>
