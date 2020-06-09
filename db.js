@@ -1,5 +1,8 @@
 const spicedPg = require("spiced-pg");
-var db = spicedPg("postgres:postgres:postgres@localhost:5432/signatures");
+var db = spicedPg(
+    process.env.DATABASE_URL ||
+        "postgres:postgres:postgres@localhost:5432/signatures"
+);
 
 module.exports.addAccount = (first, last, email, hashedPw) => {
     return db.query(

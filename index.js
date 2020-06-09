@@ -236,6 +236,10 @@
             req.body.url.startsWith("https://") ||
             req.body.url == ""
         ) {
+            console.log("req.body.age", req.body.age);
+            if (!req.body.age) {
+                req.body.age = "0";
+            }
             db.addProfile(
                 req.body.age,
                 req.body.city,
@@ -278,12 +282,7 @@
 
     app.post("/petition", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        console.log("req.body.signature", req.body.signature);
-        console.log(
-            "req.body.signature.className",
-            req.body.signature.className
-        );
-
+        console.log("req.session.userName:", req.session.userName);
         if (req.body.signature) {
             db.addSignature(req.body.signature, req.session.userID)
                 .then(() => {
@@ -302,6 +301,7 @@
             console.log("the form is not signed in properly");
             res.render("petition", {
                 err: "oops, looks like you didn't sign it! try again please",
+                name: req.session.userName,
             });
         }
     });
@@ -384,5 +384,7 @@
             });
     });
 
-    app.listen(8080, () => console.log("server is listening..."));
+    app.listen(process.env.PORT || 8080, () =>
+        console.log("server is listening...")
+    );
 })();
