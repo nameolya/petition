@@ -278,7 +278,13 @@
 
     app.post("/petition", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        if (req.body.signature.className === "signed") {
+        console.log("req.body.signature", req.body.signature);
+        console.log(
+            "req.body.signature.className",
+            req.body.signature.className
+        );
+
+        if (req.body.signature) {
             db.addSignature(req.body.signature, req.session.userID)
                 .then(() => {
                     console.log("new signature added");

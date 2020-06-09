@@ -19,7 +19,6 @@
         if (!isSigning) {
             return;
         } else {
-            signature.class = "signed";
             ctx.beginPath();
             ctx.moveTo(lastX, lastY);
             ctx.lineTo(e.offsetX, e.offsetY);
@@ -34,12 +33,13 @@
     });
 
     canvas.addEventListener("mousemove", sign);
-    canvas.addEventListener("mouseup", () => (isSigning = false));
+    canvas.addEventListener("mouseup", () => {
+        isSigning = false;
+        canvasToDataURL();
+    });
     canvas.addEventListener("mouseout", () => (isSigning = false));
 
     function canvasToDataURL() {
         signature.value = canvas.toDataURL();
     }
-
-    submit.addEventListener("mousedown", canvasToDataURL);
 })();
