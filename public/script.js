@@ -1,8 +1,6 @@
 (function () {
-    console.log("hello");
     const canvas = document.getElementById("canvas");
     const signature = document.getElementById("signature");
-    const submit = document.getElementById("submit");
 
     const ctx = canvas.getContext("2d");
 

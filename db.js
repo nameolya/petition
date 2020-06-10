@@ -6,7 +6,7 @@ var db = spicedPg(
 
 module.exports.addAccount = (first, last, email, hashedPw) => {
     return db.query(
-        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id, first, last`,
+        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING id, first`,
         [first, last, email, hashedPw]
     );
 };
@@ -57,6 +57,40 @@ module.exports.getSignersByCity = (city) => {
 module.exports.addProfile = (age, city, url, sessionUserID) => {
     return db.query(
         `INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4) RETURNING id`,
-        [age, city, url, sessionUserID]
+        [age || null, city, url, sessionUserID]
     );
+};
+
+module.exports.getUser = (sessionUserID) => {
+    return db.query(
+        `SELECT first, last, email, age, city, url FROM users JOIN user_profiles ON users.id=user_profiles.user_id WHERE users.id = $1`,
+        [sessionUserID]
+    );
+};
+
+module.exports.editPassword = (hashedPw, sessionUserID) => {
+    return db.query(`UPDATE users SET password=$1 WHERE id=$2;`, [
+        hashedPw,
+        sessionUserID,
+    ]);
+};
+
+module.exports.editAccount = (sessionUserID, first, last, email) => {
+    return db.query(
+        `UPDATE users SET first=$2,last=$3,email=$4 WHERE id=$1 RETURNING first`,
+        [sessionUserID, first, last, email]
+    );
+};
+
+module.exports.editProfile = (age, city, url, sessionUserID) => {
+    return db.query(
+        `UPDATE user_profiles SET age=$1, city=$2, url=$3 WHERE user_id=$4;`,
+        [age || null, city, url, sessionUserID]
+    );
+};
+
+module.exports.deleteSignature = (sessionUserID) => {
+    return db.query(`DELETE FROM signatures WHERE user_id = $1`, [
+        sessionUserID,
+    ]);
 };

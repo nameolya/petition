@@ -67,7 +67,8 @@
             req.session.userID &&
             !req.session.sigID &&
             req.url != "/petition" &&
-            req.url != "/profile"
+            req.url != "/profile" &&
+            req.url != "/edit"
         ) {
             console.log("redirect: user shall sign the petition first");
             res.redirect("/petition");
@@ -120,7 +121,7 @@
                             console.log("new record added");
                             req.session.userID = results.rows[0].id;
                             req.session.userName = results.rows[0].first;
-                            req.session.userSurname = results.rows[0].last;
+                            // req.session.userSurname = results.rows[0].last;
                             console.log("req.session:", req.session);
                             res.redirect("/profile");
                         })
@@ -166,7 +167,6 @@
                             if (match) {
                                 req.session.userID = results.rows[0].id;
                                 req.session.userName = results.rows[0].first;
-                                req.session.userSurname = results.rows[0].last;
                                 console.log(
                                     "req.session(ID, Name, Last name):",
                                     req.session
@@ -242,9 +242,6 @@
             req.body.url == ""
         ) {
             console.log("req.body.age", req.body.age);
-            if (!req.body.age) {
-                req.body.age = "0";
-            }
             db.addProfile(
                 req.body.age,
                 req.body.city,
@@ -262,7 +259,7 @@
                     console.log("error in addProfile:", err);
                     res.render("profile", {
                         name: req.session.userName,
-                        err: "oops, something went wrong, please try again!",
+                        err: "please enter valid age",
                     });
                 });
         } else {
@@ -271,6 +268,100 @@
                 name: req.session.userName,
                 err: "please enter a valid url",
             });
+        }
+    });
+
+    /// EDIT PROFILE---
+
+    app.get("/edit", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        console.log("req.session.userID:", req.session.userID);
+        db.getUser(req.session.userID).then((results) => {
+            console.log("getProfile results.rows[0]", results.rows[0]);
+            res.render("edit", {
+                first: results.rows[0].first,
+                last: results.rows[0].last,
+                email: results.rows[0].email,
+                age: results.rows[0].age,
+                city: results.rows[0].city,
+                url: results.rows[0].url,
+                err: req.session.err,
+            });
+        });
+    });
+
+    app.post("/edit", (req, res) => {
+        req.session.err = null;
+        console.log("req.session.err:", req.session.err);
+        if (
+            !req.body.url.startsWith("http://") &&
+            !req.body.url.startsWith("https://") &&
+            req.body.url
+        ) {
+            console.log("the url is not valid");
+            req.session.err =
+                "please provide valid url, the url should start with http:// or https://";
+            res.redirect("edit");
+        } else {
+            if (req.body.password) {
+                hash(req.body.password)
+                    .then((hashedPw) => {
+                        Promise.all([
+                            db.editAccount(
+                                req.session.userID,
+                                req.body.first,
+                                req.body.last,
+                                req.body.email
+                            ),
+                            db.editPassword(hashedPw, req.session.userID),
+                            db.editProfile(
+                                req.body.age,
+                                req.body.city,
+                                req.body.url,
+                                req.session.userID
+                            ),
+                        ])
+                            .then((results) => {
+                                console.log("record updated");
+                                req.session.userName = results[0].rows[0].first;
+                                res.redirect("/signed");
+                            })
+                            .catch((err) => {
+                                console.log("error in Promise.all:", err);
+                                req.session.err = "please enter valid age";
+                                res.redirect("edit");
+                            });
+                    })
+                    .catch((err) => {
+                        console.log("error in hash:", err);
+                        res.redirect("edit");
+                    });
+            } else {
+                Promise.all([
+                    db.editAccount(
+                        req.session.userID,
+                        req.body.first,
+                        req.body.last,
+                        req.body.email
+                    ),
+                    db.editProfile(
+                        req.body.age,
+                        req.body.city,
+                        req.body.url,
+                        req.session.userID
+                    ),
+                ])
+                    .then((results) => {
+                        console.log("record updated");
+                        req.session.userName = results[0].rows[0].first;
+                        res.redirect("/signed");
+                    })
+                    .catch((err) => {
+                        console.log("error in Promise.all:", err);
+                        req.session.err = "please enter valid age";
+                        res.redirect("edit");
+                    });
+            }
         }
     });
 
@@ -300,6 +391,7 @@
                     console.log("error in addSignature:", err);
                     res.render("petition", {
                         err: "oops, something went wrong, please try again!",
+                        name: req.session.userName,
                     });
                 });
         } else {
@@ -341,9 +433,11 @@
                     let fullName = " ";
                     fullName +=
                         results.rows[i].first + " " + results.rows[i].last;
+                    let userAge;
+                    userAge = results.rows[i].age;
                     signers.push({
                         fullname: fullName,
-                        age: results.rows[i].age,
+                        age: userAge,
                         city: results.rows[i].upper,
                         url: results.rows[i].url,
                     });
@@ -373,13 +467,15 @@
                     let fullName = " ";
                     fullName +=
                         results.rows[i].first + " " + results.rows[i].last;
+                    let userAge;
+                    userAge = results.rows[i].age;
                     signers.push({
                         fullname: fullName,
-                        age: results.rows[i].age,
+                        age: userAge,
                         url: results.rows[i].url,
                     });
                 }
-                res.render("signers", {
+                res.render("signers_city", {
                     signers: signers,
                     cityselected: req.params.city.slice(1).toUpperCase(),
                 });
@@ -387,6 +483,24 @@
             .catch((err) => {
                 console.log("err in getSigners:", err);
             });
+    });
+
+    /// DELETE-----
+
+    app.get("/delete", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        db.deleteSignature(req.session.userID).then(() => {
+            req.session.sigID = null;
+            console.log("signature deleted");
+            res.redirect("/petition");
+        });
+    });
+
+    /// LOG OUT ---
+    app.get("/logout", (req, res) => {
+        console.log(`ran ${req.method} at ${req.url} route`);
+        req.session = null;
+        res.redirect("/login");
     });
 
     app.listen(process.env.PORT || 8080, () =>

@@ -1,0 +1,53 @@
+
+<div>
+  <a href="petition"> Petition |</a> <a href="logout"> Logout </a>
+</div>
+
+<h1> Edit your profile: </h1>
+ <form method="POST"> 
+
+      <div> 
+       <h2>First Name: </h2>
+       <input type="text" name="first" value="{{first}}">  
+       </div>
+
+       <div> 
+       <h2>Last Name: </h2>
+       <input type="text" name="last" value="{{last}}" >
+       </div> 
+
+       <div> 
+       <h2>Email Address: </h2>
+       <input type="text" name="email" value="{{email}}">  
+       </div>
+
+       <div> 
+       <h2>Password: </h2>
+       <input type="text" name="password" >
+       </div> 
+
+
+       <div> 
+       <h2>Age: </h2>
+       <input type="text" name="age" value="{{age}}">  
+       </div>
+
+       <div> 
+       <h2>City: </h2>
+       <input type="text" name="city" value="{{city}}">
+       </div> 
+
+       <div> 
+       <h2>Homepage:</h2>
+       <input type="text" name="url" value="{{url}}">  
+       </div>
+
+        <div>
+        <input type="submit" name ="submit" value="SUBMIT">
+        </div>
+
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">    
+</form>
+        <div>{{err}}</div>  
+
+        
