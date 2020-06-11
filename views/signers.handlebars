@@ -8,14 +8,14 @@
 <section>
 <h1>We will make the world a better place!</h1>
 
-<h2>
+<p>
     {{#each signers}}
-    <ul>  {{#if url}}
+    <ul class="signers">  {{#if url}}
         <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
 {{else}}
        {{this.fullname}}  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
          {{/if}}
     </ul>
     {{/each}}
-    </h2>
+    </p>
 </section>
