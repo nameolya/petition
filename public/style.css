@@ -13,6 +13,8 @@ canvas {
 body {
     box-sizing: border-box;
     color: black;
+    margin-left: 400px;
+    margin-right: 100px;
 }
 h1 {
     font-family: "Indie Flower", serif;
@@ -22,11 +24,11 @@ h2 {
     font-family: "Indie Flower", serif;
 }
 
-/* a,
+a,
 p {
     font-family: "Lato", serif;
     color: #393e46;
-} */
+}
 
 .err {
     color: #cf7500;
@@ -41,7 +43,6 @@ section {
     align-items: center;
     justify-content: center;
     padding: 1rem 0;
-    border: solid black 1px;
 }
 
 input {
@@ -50,17 +51,23 @@ input {
 }
 
 .nav {
-    border: solid black 1px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    margin-bottom: 20px;
+    margin-top: 0px;
 }
 
 .signers {
-    color: red;
+    font-family: "Lato", serif;
+    color: #393e46;
 }
 
 .navel {
     font-family: "Lato", serif;
     color: #cf7500;
+}
+
+.important {
+    font-size: 250%;
 }
