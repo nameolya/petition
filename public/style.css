@@ -12,7 +12,7 @@ canvas {
 
 body {
     box-sizing: border-box;
-    color: #393e46;
+    color: black;
 }
 h1 {
     font-family: "Indie Flower", serif;
@@ -22,14 +22,15 @@ h2 {
     font-family: "Indie Flower", serif;
 }
 
-a,
+/* a,
 p {
     font-family: "Lato", serif;
     color: #393e46;
-}
+} */
 
 .err {
     color: #cf7500;
+    font-family: "Lato", serif;
 }
 
 section {
@@ -57,4 +58,9 @@ input {
 
 .signers {
     color: red;
+}
+
+.navel {
+    font-family: "Lato", serif;
+    color: #cf7500;
 }

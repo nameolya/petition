@@ -8,12 +8,12 @@
 </div>
 
 <section>
-<h1>We, citizens of {{cityselected}},
-    want to make the world a better place!</h1>
+<h1>We, citizens of {{cityselected}},</h1>
+    <h1>want to make the world a better place!</h1>
 
-<p class="signers">
+<p>
     {{#each signers}}
-    <ul>  
+    <ul class="signers">  
         {{#if url}}
         <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a> 
 {{else}}
