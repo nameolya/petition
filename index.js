@@ -68,7 +68,8 @@
             !req.session.sigID &&
             req.url != "/petition" &&
             req.url != "/profile" &&
-            req.url != "/edit"
+            req.url != "/edit" &&
+            req.url != "/logout"
         ) {
             console.log("redirect: user shall sign the petition first");
             res.redirect("/petition");
@@ -266,7 +267,8 @@
             console.log("the url is not valid");
             res.render("profile", {
                 name: req.session.userName,
-                err: "please enter a valid url",
+                err:
+                    "please provide valid url, the url should start with http:// or https://",
             });
         }
     });
@@ -278,15 +280,19 @@
         console.log("req.session.userID:", req.session.userID);
         db.getUser(req.session.userID).then((results) => {
             console.log("getProfile results.rows[0]", results.rows[0]);
-            res.render("edit", {
-                first: results.rows[0].first,
-                last: results.rows[0].last,
-                email: results.rows[0].email,
-                age: results.rows[0].age,
-                city: results.rows[0].city,
-                url: results.rows[0].url,
-                err: req.session.err,
-            });
+            if (!results.rows[0]) {
+                res.render("edit");
+            } else {
+                res.render("edit", {
+                    first: results.rows[0].first,
+                    last: results.rows[0].last,
+                    email: results.rows[0].email,
+                    age: results.rows[0].age,
+                    city: results.rows[0].city,
+                    url: results.rows[0].url,
+                    err: req.session.err,
+                });
+            }
         });
     });
 
@@ -301,6 +307,10 @@
             console.log("the url is not valid");
             req.session.err =
                 "please provide valid url, the url should start with http:// or https://";
+            res.redirect("edit");
+        } else if (!req.body.email) {
+            console.log("the email field can not be empty");
+            req.session.err = "the email field can not be empty";
             res.redirect("edit");
         } else {
             if (req.body.password) {
@@ -499,7 +509,7 @@
     /// LOG OUT ---
     app.get("/logout", (req, res) => {
         console.log(`ran ${req.method} at ${req.url} route`);
-        req.session = null;
+        req.session.userID = null;
         res.redirect("/login");
     });
 

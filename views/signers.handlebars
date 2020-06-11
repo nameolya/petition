@@ -1,9 +1,13 @@
-<div>
- <a href="signed"> Petition |</a>  <a href="edit"> Edit profile |</a> <a href="delete"> Delete Signature |</a> <a href="/logout"> Logout </a>
-</div>
 
+<div>
+    <div><a href="signed"> Petition |</a></div>
+    <div><a href="edit"> Edit profile |</a></div>
+    <div><a href="delete"> Delete Signature |</a></div>
+    <div><a href="/logout"> Logout </a></div>
+</div>
+<section>
 <h1>We will make the world a better place!</h1>
-{{!-- <h2>{{cityselected}}</h2> --}}
+
 <h2>
     {{#each signers}}
     <ul>  {{#if url}}
@@ -14,3 +18,4 @@
     </ul>
     {{/each}}
     </h2>
+</section>

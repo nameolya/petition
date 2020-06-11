@@ -1,13 +1,15 @@
 
-<div>
-  <a href="petition"> Petition |</a> <a href="logout"> Logout </a>
+<div class="nav">
+  <div><a href="petition"> Petition |</a></div>
+  <div><a href="logout"> Logout </a></div>
 </div>
 
+<section>
 <h1> Edit your profile: </h1>
  <form method="POST"> 
 
       <div> 
-       <h2>First Name: </h2>
+       <h2>First Name: </h2> 
        <input type="text" name="first" value="{{first}}">  
        </div>
 
@@ -26,7 +28,6 @@
        <input type="text" name="password" >
        </div> 
 
-
        <div> 
        <h2>Age: </h2>
        <input type="text" name="age" value="{{age}}">  
@@ -36,7 +37,6 @@
        <h2>City: </h2>
        <input type="text" name="city" value="{{city}}">
        </div> 
-
        <div> 
        <h2>Homepage:</h2>
        <input type="text" name="url" value="{{url}}">  
@@ -48,6 +48,7 @@
 
         <input type="hidden" name="_csrf" value="{{csrfToken}}">    
 </form>
-        <div>{{err}}</div>  
+        <div class="err"> <p>{{err}} </p></div> 
+</section> 
 
         

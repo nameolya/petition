@@ -1,8 +1,9 @@
-<div>
-   <a href="edit"> Edit Profile |</a> <a href="logout"> Logout </a> 
+<div class="nav">
+<div><a href="edit"> Edit Profile |</div>
+<div><a href="logout"> Logout </a> </div> 
 </div>
 
-
+<section>
 <h1>Hey {{name}}! We are happy to see you! </h1>
 <h1>Every voice makes a difference! </h1>
 <h1>Please sign the petition and help us make this world a better place</h1>
@@ -19,5 +20,6 @@
         <input type="hidden" name="signature" id="signature">
         <input type="hidden" name="_csrf" value="{{csrfToken}}">    
 </form>
-<div>{{err}} </div>
+<div class="err"><p>{{err}} </p></div>
+</section>
 

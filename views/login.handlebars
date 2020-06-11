@@ -1,9 +1,10 @@
+<section>
 <h1>Please log in!</h1>
 
 <form method="POST"> 
 
        <div> 
-       <h2>Email: </h2>
+       <h2>Email:</h2>
        <input type="text" name="email">  
        </div>
 
@@ -17,4 +18,8 @@
         </div>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">    
 </form>
-<div>{{err}} </div>
+<div class="err"><p>{{err}} <p></div>
+<div>
+    <p>If you are not yet a member, please <a href="register">Register</a></p>
+</div>
+</section>

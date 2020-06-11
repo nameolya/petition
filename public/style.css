@@ -1,3 +1,60 @@
+html {
+    background: url(img/bkgr4.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 canvas {
     border: dotted black 2px;
+}
+
+body {
+    box-sizing: border-box;
+    color: #393e46;
+}
+h1 {
+    font-family: "Indie Flower", serif;
+}
+
+h2 {
+    font-family: "Indie Flower", serif;
+}
+
+a,
+p {
+    font-family: "Lato", serif;
+    color: #393e46;
+}
+
+.err {
+    color: #cf7500;
+}
+
+section {
+    box-sizing: border-box;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    border: solid black 1px;
+}
+
+input {
+    font-size: 120%;
+    font-family: "Lato", serif;
+}
+
+.nav {
+    border: solid black 1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.signers {
+    color: red;
 }

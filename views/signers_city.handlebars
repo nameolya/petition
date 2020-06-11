@@ -1,16 +1,25 @@
-<div>
- <a href="signed"> Petition |</a> <a href="signers"> Signers |</a>  <a href="edit"> Edit profile |</a> <a href="delete"> Delete Signature |</a> <a href="logout">Logout</a>
-</div>
- 
-<h1>We, citizens of {{cityselected}}, want to make the world a better place!</h1>
 
-<h2>
+<div class="nav">
+    <div><a href="signed"> Petition |</a></div>
+    <div><a href="signers"> Signers |</a></div>
+    <div><a href="edit"> Edit profile |</a></div>
+    <div><a href="delete"> Delete Signature |</a></div>
+    <div><a href="logout">Logout</a></div>
+</div>
+
+<section>
+<h1>We, citizens of {{cityselected}},
+    want to make the world a better place!</h1>
+
+<p class="signers">
     {{#each signers}}
-    <ul>  {{#if url}}
-        <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
+    <ul>  
+        {{#if url}}
+        <a href={{url}}>{{this.fullname}}</a>  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a> 
 {{else}}
        {{this.fullname}}  {{this.age}}  <a href="/signers:{{this.city}}">{{this.city}}</a>
          {{/if}}
     </ul>
     {{/each}}
-    </h2>
+    </p>
+</section>
