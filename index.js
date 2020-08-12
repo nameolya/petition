@@ -308,9 +308,13 @@
             req.session.err =
                 "please provide valid url, the url should start with http:// or https://";
             res.redirect("edit");
+            // } else if (!req.body.first) {
+            //     console.log("the name field can not be empty");
+            //     req.session.err = "the name field can't be empty";
+            //     res.redirect("edit");
         } else if (!req.body.email) {
             console.log("the email field can not be empty");
-            req.session.err = "the email field can not be empty";
+            req.session.err = "the email field can't be empty";
             res.redirect("edit");
         } else {
             if (req.body.password) {
